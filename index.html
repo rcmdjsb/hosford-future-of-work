@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hosford Technology • The Future of Work Tracker</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-[#061a22] text-slate-100 min-h-screen flex flex-col justify-between font-sans">
+
+  <!-- Header -->
+  <header id="mainHeader" class="border-b border-[#1f7a99]/40 bg-[#092631]/95 backdrop-blur sticky top-0 z-20 shadow-lg">
+    <div class="max-w-7xl mx-auto px-4 py-3.5 flex flex-wrap items-center justify-between gap-3">
+      <div class="flex items-center gap-3.5">
+        <img src="logo.jpeg" alt="Hosford Husky Logo" class="w-12 h-12 rounded-xl object-cover border-2 border-[#7cc9e8] shadow-md bg-[#1a7a9a]" />
+        <div>
+          <span class="text-[11px] font-bold uppercase tracking-widest text-[#7cc9e8]">Hosford Technology • Project Tracker</span>
+          <h1 class="text-lg sm:text-xl font-extrabold tracking-tight text-white leading-tight">The Future of Work — Progress Board</h1>
+        </div>
+      </div>
+
+      <!-- Mode Switcher Tabs -->
+      <div class="flex items-center gap-2 bg-[#061a22] p-1.5 rounded-xl border border-[#1f7a99]/50">
+        <button id="btnStudentTab" onclick="switchView('student')" class="px-4 py-2 rounded-lg text-xs sm:text-sm font-bold bg-[#1f7a99] text-white transition">
+          ✍️ Group Check-In
+        </button>
+        <button id="btnDisplayTab" onclick="switchView('display')" class="px-4 py-2 rounded-lg text-xs sm:text-sm font-bold text-slate-300 hover:text-white transition">
+          📺 Live Class Progress
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="max-w-7xl w-full mx-auto px-4 py-6 flex-grow">
+
+    <!-- ================= VIEW 1: GROUP CHECK-IN FORM ================= -->
+    <section id="studentView" class="max-w-3xl mx-auto space-y-6">
+      <div class="bg-[#092631] border border-[#1f7a99]/50 rounded-2xl p-6 shadow-xl space-y-6">
+        <div class="border-b border-[#1f7a99]/30 pb-4">
+          <h2 class="text-xl font-extrabold text-white">Daily Group Milestone Check-In</h2>
+          <p class="text-sm text-slate-300 mt-1">Enter your group members (up to 3), select the step you are working on today, and post to the class board.</p>
+        </div>
+
+        <!-- Period & Group Members -->
+        <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
+          <div>
+            <label class="block text-xs font-semibold uppercase tracking-wider text-[#7cc9e8] mb-1.5">Period</label>
+            <select id="periodSelect" class="w-full rounded-xl bg-[#061a22] border border-[#1f7a99]/60 px-3.5 py-3 text-white focus:outline-none focus:border-[#7cc9e8]">
+              <option value="Period 1">Period 1</option>
+              <option value="Period 4">Period 4</option>
+              <option value="Period 5">Period 5</option>
+              <option value="Period 6">Period 6</option>
+              <option value="Period 7">Period 7</option>
+            </select>
+          </div>
+          <div class="sm:col-span-3">
+            <label class="block text-xs font-semibold uppercase tracking-wider text-[#7cc9e8] mb-1.5">Group Members (Max 3 — First + Last Names)</label>
+            <input id="groupMembers" type="text" placeholder="e.g., Maya R., Leo T., Sam K." class="w-full rounded-xl bg-[#061a22] border border-[#1f7a99]/60 px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-[#7cc9e8]" />
+          </div>
+        </div>
+
+        <!-- Project Step Selector -->
+        <div>
+          <label class="block text-xs font-semibold uppercase tracking-wider text-[#7cc9e8] mb-2">1. Where Is Your Group in The Future of Work Project?</label>
+          <div id="stepsGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-2.5"></div>
+        </div>
+
+        <!-- PERSONAL WEBSITE LINK REMINDER BANNER (Triggers on Step 9 or Finished/Extensions) -->
+        <div id="finishedReminderBox" class="hidden rounded-2xl bg-amber-950/40 border-2 border-amber-400 p-5 space-y-3 shadow-lg">
+          <div class="flex items-start gap-3">
+            <span class="text-2xl">🔗</span>
+            <div>
+              <h3 class="font-extrabold text-amber-300 text-base">Important Before You Move On: Link Your Personal Website!</h3>
+              <p class="text-xs sm:text-sm text-slate-200 mt-1 leading-relaxed">
+                Every member of your group must link your finished <strong>Future of Work Google Site</strong> onto your <strong>Personal Student Website</strong>—and make sure your Google Site sharing permissions are set to <strong>Published / Public</strong> so visitors can view it!
+              </p>
+            </div>
+          </div>
+          <label class="flex items-center gap-3 bg-[#061a22] p-3 rounded-xl border border-amber-400/40 cursor-pointer">
+            <input id="linkedConfirmCheck" type="checkbox" class="w-5 h-5 accent-emerald-400 rounded" />
+            <span class="text-xs sm:text-sm font-bold text-white">Yes — we linked our Future of Work website to our Personal Student Websites!</span>
+          </label>
+        </div>
+
+        <!-- Specific Progress / Site Link -->
+        <div>
+          <label class="block text-xs font-semibold uppercase tracking-wider text-[#7cc9e8] mb-1.5">2. Specific Details (Today's Task, Jobs Chosen, or Google Site Link)</label>
+          <textarea id="workDetails" rows="2" placeholder="e.g., Recording podcast video for Driving Question #3, or https://sites.google.com/..." class="w-full rounded-xl bg-[#061a22] border border-[#1f7a99]/60 p-3.5 text-white placeholder-slate-500 focus:outline-none focus:border-[#7cc9e8]"></textarea>
+        </div>
+
+        <button id="submitBtn" onclick="submitCheckIn()" class="w-full py-3.5 rounded-xl bg-[#1f7a99] hover:bg-[#2793b8] font-bold text-white shadow-lg border border-[#7cc9e8]/30 transition">
+          Update Group Status ✓
+        </button>
+
+        <!-- Confirmation Banner -->
+        <div id="confirmBanner" class="hidden rounded-xl bg-emerald-950/50 border border-emerald-400/60 p-4 text-center space-y-2">
+          <div class="text-emerald-300 font-extrabold text-base">✓ Group Progress Updated!</div>
+          <p id="confirmReminderText" class="text-xs text-slate-200"></p>
+          <button onclick="switchView('display')" class="mt-1 inline-block text-xs font-bold text-[#7cc9e8] underline">View Live Class Progress Board →</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= VIEW 2: LIVE CLASSROOM DISPLAY ================= -->
+    <section id="displayView" class="hidden space-y-5">
+      <!-- Status & Period Filter Bar -->
+      <div class="bg-[#092631] border border-[#1f7a99]/50 rounded-2xl px-5 py-4 flex flex-wrap items-center justify-between gap-4 shadow-lg">
+        <div class="flex items-center gap-3">
+          <span class="relative flex h-3 w-3">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+          </span>
+          <div>
+            <h2 class="text-base sm:text-lg font-extrabold text-white">The Future of Work • Live Group Progress</h2>
+            <p id="lastSyncText" class="text-xs text-slate-400">Syncing live with Google Sheets...</p>
+          </div>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-2.5">
+          <!-- Period Filter -->
+          <select id="displayPeriodFilter" onchange="renderBoard()" class="rounded-xl bg-[#061a22] border border-[#1f7a99]/60 px-3 py-2 text-xs font-bold text-white focus:outline-none focus:border-[#7cc9e8]">
+            <option value="ALL">All Periods</option>
+            <option value="Period 1">Period 1</option>
+            <option value="Period 4">Period 4</option>
+            <option value="Period 5">Period 5</option>
+            <option value="Period 6">Period 6</option>
+            <option value="Period 7">Period 7</option>
+          </select>
+
+          <div class="bg-[#061a22] border border-[#7cc9e8]/40 rounded-xl px-3.5 py-1 text-center">
+            <span class="text-[10px] font-bold uppercase text-[#7cc9e8] block">Groups</span>
+            <span id="totalGroupsBadge" class="text-base font-black text-white">0</span>
+          </div>
+
+          <button onclick="fetchBoardData()" class="px-3.5 py-2.5 rounded-xl bg-[#061a22] hover:bg-[#1f7a99]/30 border border-[#1f7a99]/60 text-xs font-bold text-[#7cc9e8] transition">
+            ↻ Refresh
+          </button>
+          <button id="tvModeBtn" onclick="toggleTvMode()" class="px-3.5 py-2.5 rounded-xl bg-[#1f7a99] hover:bg-[#2793b8] text-xs font-bold text-white transition">
+            ⛶ TV Mode
+          </button>
+        </div>
+      </div>
+
+      <!-- 4 Phase Columns -->
+      <div id="boardLanesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4"></div>
+    </section>
+
+  </main>
+
+  <footer id="mainFooter" class="text-center text-xs text-slate-400 py-4 border-t border-[#1f7a99]/30 bg-[#092631]/60">
+    Hosford Middle School Technology • The Future of Work Project Tracker
+  </footer>
+
+  <script>
+    // =========================================================================
+    // 1. CONFIGURATION (PASTE YOUR GOOGLE APPS SCRIPT /exec URL HERE)
+    // =========================================================================
+    const SHEET_WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbz2esaf0O22OC04LZjre_IT72ChZ_bovoO4BVW0mHe3kXdZaF2Qt6I4yT4COrlqAGIo/exec';
+
+    const PROJECT_STEPS = [
+      { id: 'Entry Event: AI Chat & Reaction Videos', phase: 'setup', desc: 'Chatting with Future of Work AI & filming reaction' },
+      { id: 'Step 1: Getting Started (Site, Logo & Header)', phase: 'setup', desc: 'Google Site, Canva logo/header & About Group video' },
+      { id: 'Step 2: Jobs Pages (2 Jobs per Student)', phase: 'setup', desc: 'Creating job sub-pages & current-day job videos' },
+      { id: 'Step 3: Driving Questions (4 Podcast Videos)', phase: 'research', desc: 'Initial podcast/OBS videos for 4 chosen questions' },
+      { id: 'Step 4: Required Media & Reaction Videos', phase: 'research', desc: '2 videos, 2 sites, 2 articles, 2 others + reactions' },
+      { id: 'Step 5: Additional Job Research & Reactions', phase: 'research', desc: 'Finding future-of-job sources & screen-recording reactions' },
+      { id: 'Step 6: AI, Robots & Your Job (3–5 Min Video)', phase: 'production', desc: 'Prediction videos on each job sub-page' },
+      { id: 'Step 7: Updated Driving Question Videos', phase: 'production', desc: 'New research-backed Canva/OBS videos for all 4 DQs' },
+      { id: 'Step 8: Final Homepage Podcast', phase: 'production', desc: 'Synthesizing learning with a positive closing message' },
+      { id: 'Step 9: Group & Individual Reflection', phase: 'production', desc: 'Final reflection on website, habits & learning', showLinkReminder: true },
+      { id: 'Finished — Working on Extensions', phase: 'finished', desc: 'Site complete, permissions public & working on extensions', showLinkReminder: true }
+    ];
+
+    const BOARD_PHASES = [
+      { id: 'setup', title: 'Phase 1: Setup & Jobs', subtitle: 'Entry Event • Steps 1–2', border: 'border-sky-400/50', badge: 'bg-sky-500/20 text-sky-300 border-sky-400/40' },
+      { id: 'research', title: 'Phase 2: Research & Media', subtitle: 'Steps 3–5', border: 'border-teal-400/50', badge: 'bg-teal-500/20 text-teal-300 border-teal-400/40' },
+      { id: 'production', title: 'Phase 3: Videos & Podcast', subtitle: 'Steps 6–9', border: 'border-amber-400/50', badge: 'bg-amber-500/20 text-amber-300 border-amber-400/40' },
+      { id: 'finished', title: '🌟 Finished / Extensions', subtitle: 'Ready for Showcase', border: 'border-emerald-400/70', badge: 'bg-emerald-500/20 text-emerald-300 border-emerald-400/40' }
+    ];
+
+    // =========================================================================
+    // 2. STATE & INITIALIZATION
+    // =========================================================================
+    let selectedStep = null;
+    let cachedGroups = [];
+    let pollInterval = null;
+    let isTvMode = false;
+
+    const savedGroup = localStorage.getItem('hosford_fow_group');
+    const savedPeriod = localStorage.getItem('hosford_fow_period');
+    if (savedGroup) document.getElementById('groupMembers').value = savedGroup;
+    if (savedPeriod) document.getElementById('periodSelect').value = savedPeriod;
+
+    function buildStepButtons() {
+      const grid = document.getElementById('stepsGrid');
+      PROJECT_STEPS.forEach(step => {
+        const isFinishedBtn = step.phase === 'finished';
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.id = `step-btn-${step.id}`;
+        btn.className = isFinishedBtn
+          ? 'sm:col-span-2 text-left p-3.5 rounded-xl border-2 border-emerald-500/40 bg-emerald-950/20 hover:border-emerald-400 transition'
+          : 'text-left p-3.5 rounded-xl border-2 border-[#1f7a99]/40 bg-[#061a22] hover:border-[#7cc9e8] transition';
+        btn.innerHTML = `
+          <div class="font-bold text-sm ${isFinishedBtn ? 'text-emerald-300' : 'text-white'}">${step.id}</div>
+          <div class="text-xs text-slate-400 mt-0.5">${step.desc}</div>
+        `;
+        btn.onclick = () => {
+          selectedStep = step;
+          document.getElementById('finishedReminderBox').classList.toggle('hidden', !step.showLinkReminder);
+          PROJECT_STEPS.forEach(s => {
+            const el = document.getElementById(`step-btn-${s.id}`);
+            const isFin = s.phase === 'finished';
+            if (s.id === step.id) {
+              el.className = isFin
+                ? 'sm:col-span-2 text-left p-3.5 rounded-xl border-2 border-emerald-400 bg-emerald-950/50 shadow-lg transition'
+                : 'text-left p-3.5 rounded-xl border-2 border-[#7cc9e8] bg-[#1f7a99]/30 shadow-lg transition';
+            } else {
+              el.className = isFin
+                ? 'sm:col-span-2 text-left p-3.5 rounded-xl border-2 border-emerald-500/40 bg-emerald-950/20 hover:border-emerald-400 transition'
+                : 'text-left p-3.5 rounded-xl border-2 border-[#1f7a99]/40 bg-[#061a22] hover:border-[#7cc9e8] transition';
+            }
+          });
+        };
+        grid.appendChild(btn);
+      });
+    }
+
+    // =========================================================================
+    // 3. VIEW SWITCHING & TV FULLSCREEN MODE
+    // =========================================================================
+    function switchView(view) {
+      const isStudent = view === 'student';
+      document.getElementById('studentView').classList.toggle('hidden', !isStudent);
+      document.getElementById('displayView').classList.toggle('hidden', isStudent);
+
+      document.getElementById('btnStudentTab').className = isStudent
+        ? 'px-4 py-2 rounded-lg text-xs sm:text-sm font-bold bg-[#1f7a99] text-white transition'
+        : 'px-4 py-2 rounded-lg text-xs sm:text-sm font-bold text-slate-300 hover:text-white transition';
+      document.getElementById('btnDisplayTab').className = !isStudent
+        ? 'px-4 py-2 rounded-lg text-xs sm:text-sm font-bold bg-[#1f7a99] text-white transition'
+        : 'px-4 py-2 rounded-lg text-xs sm:text-sm font-bold text-slate-300 hover:text-white transition';
+
+      if (!isStudent) {
+        fetchBoardData();
+        if (!pollInterval) {
+          pollInterval = setInterval(fetchBoardData, 10000);
+        }
+      } else if (pollInterval) {
+        clearInterval(pollInterval);
+        pollInterval = null;
+      }
+    }
+
+    function toggleTvMode() {
+      isTvMode = !isTvMode;
+      document.getElementById('mainHeader').classList.toggle('hidden', isTvMode);
+      document.getElementById('mainFooter').classList.toggle('hidden', isTvMode);
+      document.getElementById('tvModeBtn').textContent = isTvMode ? '✕ Exit TV Mode' : '⛶ TV Mode';
+    }
+
+    // =========================================================================
+    // 4. SUBMIT CHECK-IN TO GOOGLE SHEETS
+    // =========================================================================
+    async function submitCheckIn() {
+      const period = document.getElementById('periodSelect').value;
+      const members = document.getElementById('groupMembers').value.trim();
+      const details = document.getElementById('workDetails').value.trim();
+      const linkedChecked = document.getElementById('linkedConfirmCheck').checked;
+
+      if (!members) return alert('Please enter your Group Members.');
+      if (!selectedStep) return alert('Please select which project step your group is on.');
+      if (!details) return alert('Please enter what your group is doing today (or paste your Google Site link).');
+
+      localStorage.setItem('hosford_fow_group', members);
+      localStorage.setItem('hosford_fow_period', period);
+
+      const btn = document.getElementById('submitBtn');
+      btn.disabled = true;
+      btn.textContent = 'Updating Status...';
+
+      const payload = {
+        period: period,
+        groupMembers: members,
+        currentStep: selectedStep.id,
+        details: details,
+        linkedPersonalSite: linkedChecked
+      };
+
+      try {
+        await fetch(SHEET_WEBHOOK_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+      } catch (err) {
+        console.error('Submission error:', err);
+      }
+
+      btn.disabled = false;
+      btn.textContent = 'Update Group Status ✓';
+
+      const banner = document.getElementById('confirmBanner');
+      const remText = document.getElementById('confirmReminderText');
+      banner.classList.remove('hidden');
+
+      if (selectedStep.showLinkReminder && !linkedChecked) {
+        remText.innerHTML = `<strong class="text-amber-300">Reminder:</strong> Don't forget to link your <strong>Future of Work Website</strong> onto each group member's <strong>Personal Student Website</strong>!`;
+      } else if (selectedStep.showLinkReminder) {
+        remText.textContent = 'Awesome job linking your Future of Work site to your Personal Student Websites!';
+      } else {
+        remText.textContent = 'When your group finishes, remember to link your Future of Work Website onto your Personal Student Websites.';
+      }
+    }
+
+    // =========================================================================
+    // 5. LIVE CLASSROOM DISPLAY RENDERER (JSONP - CORS-PROOF FOR PPS)
+    // =========================================================================
+    window.handleBoardCallback = function(data) {
+      cachedGroups = data.groups || [];
+      renderBoard();
+      const nowTime = new Date().toLocaleTimeString([], { hour: 'numeric', minute: '2-digit', second: '2-digit' });
+      document.getElementById('lastSyncText').textContent = `Live • Last updated at ${nowTime}`;
+    };
+
+    function fetchBoardData() {
+      if (SHEET_WEBHOOK_URL.includes('PASTE_YOUR')) return;
+      const oldScript = document.getElementById('jsonp-board-script');
+      if (oldScript) oldScript.remove();
+
+      const script = document.createElement('script');
+      script.id = 'jsonp-board-script';
+      script.src = `${SHEET_WEBHOOK_URL}?callback=handleBoardCallback&t=${Date.now()}`;
+      script.onerror = function() {
+        document.getElementById('lastSyncText').textContent = 'Check Apps Script deployment access (must be Anyone)';
+      };
+      document.body.appendChild(script);
+    }
+
+    function getPhaseForStep(stepLabel) {
+      const found = PROJECT_STEPS.find(s => s.id === stepLabel);
+      return found ? found.phase : 'setup';
+    }
+
+    function renderBoard() {
+      const periodFilter = document.getElementById('displayPeriodFilter').value;
+      const filtered = periodFilter === 'ALL'
+        ? cachedGroups
+        : cachedGroups.filter(g => g.period === periodFilter);
+
+      document.getElementById('totalGroupsBadge').textContent = filtered.length;
+
+      const grid = document.getElementById('boardLanesGrid');
+      grid.innerHTML = '';
+
+      BOARD_PHASES.forEach(phase => {
+        const matching = filtered.filter(g => getPhaseForStep(g.currentStep) === phase.id);
+
+        const lane = document.createElement('div');
+        lane.className = `bg-[#092631] border-2 ${phase.border} rounded-2xl p-4 shadow-xl flex flex-col space-y-3`;
+
+        const cardsHtml = matching.length > 0
+          ? matching.map(item => {
+              const isLinked = item.linkedPersonalSite === 'Yes ✓';
+              const linkBadge = phase.id === 'finished'
+                ? (isLinked
+                    ? `<span class="inline-block text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-400/40">🔗 Linked to Personal Site</span>`
+                    : `<span class="inline-block text-[10px] font-bold px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-400/40">⚠️ Link to Personal Site!</span>`)
+                : '';
+
+              return `
+                <div class="bg-[#061a22] border border-[#1f7a99]/40 rounded-xl p-3.5 space-y-1.5">
+                  <div class="flex items-center justify-between gap-2">
+                    <span class="text-[11px] font-bold px-2 py-0.5 rounded bg-[#1f7a99]/30 text-[#7cc9e8]">${escapeHtml(item.period)}</span>
+                    <span class="text-[11px] text-slate-400">${escapeHtml(item.date)} • ${escapeHtml(item.time)}</span>
+                  </div>
+                  <div class="font-extrabold text-white text-sm sm:text-base">${escapeHtml(item.groupMembers)}</div>
+                  <div class="text-xs font-bold text-[#7cc9e8]">${escapeHtml(item.currentStep)}</div>
+                  <p class="text-xs text-slate-300 leading-snug break-words">${escapeHtml(item.details)}</p>
+                  ${linkBadge}
+                </div>
+              `;
+            }).join('')
+          : `<div class="text-xs text-slate-500 italic py-6 text-center border border-dashed border-slate-800 rounded-xl">No groups in this stage yet</div>`;
+
+        lane.innerHTML = `
+          <div class="flex items-start justify-between border-b border-[#1f7a99]/30 pb-2.5 gap-2">
+            <div>
+              <h3 class="font-extrabold text-white text-sm sm:text-base">${phase.title}</h3>
+              <span class="text-[11px] text-slate-400">${phase.subtitle}</span>
+            </div>
+            <span class="text-xs font-extrabold px-2.5 py-0.5 rounded-full border ${phase.badge}">${matching.length}</span>
+          </div>
+          <div class="space-y-2.5 flex-grow">
+            ${cardsHtml}
+          </div>
+        `;
+        grid.appendChild(lane);
+      });
+    }
+
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    // Initialize
+    buildStepButtons();
+    renderBoard();
+  </script>
+</body>
+</html>
